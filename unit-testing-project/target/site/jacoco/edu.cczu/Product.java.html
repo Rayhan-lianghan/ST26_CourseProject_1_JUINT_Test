@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Product.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">unit-testing-project</a> &gt; <a href="index.source.html" class="el_package">edu.cczu</a> &gt; <span class="el_source">Product.java</span></div><h1>Product.java</h1><pre class="source lang-java linenums">package edu.cczu;
+
+/**
+ * Manages product information.
+ * Debugged version: Fixed validation logic and stock management flaws.
+ */
+public class Product {
+    private Long id;
+    private String name;
+    private double price; 
+    private int stock;
+    private String category;
+
+<span class="fc" id="L14">    public Product(Long id, String name, double price, int stock, String category) {</span>
+<span class="fc" id="L15">        this.id = id;</span>
+<span class="fc" id="L16">        this.name = name;</span>
+<span class="fc" id="L17">        this.price = price;</span>
+<span class="fc" id="L18">        this.stock = stock;</span>
+<span class="fc" id="L19">        this.category = category;</span>
+<span class="fc" id="L20">    }</span>
+
+    /**
+     * Validates if product information follows business rules.
+     * Rules: Price &gt; 0, Stock &gt;= 0, Name &amp; Category not null/empty.
+     */
+    public boolean validateProduct() {
+        // FIXED Defect 1: Price must be strictly greater than 0
+<span class="fc bfc" id="L28" title="All 2 branches covered.">        if (price &lt;= 0) {</span>
+<span class="fc" id="L29">            return false;</span>
+        }
+        
+        // FIXED Defect 2: Stock must be 0 or greater
+<span class="pc bpc" id="L33" title="1 of 2 branches missed.">        if (stock &lt; 0) {</span>
+<span class="nc" id="L34">            return false;</span>
+        }
+        
+        // FIXED Defect 3: Category and Name validation
+<span class="pc bpc" id="L38" title="3 of 6 branches missed.">        if (id == null || name == null || name.isEmpty()) {</span>
+<span class="nc" id="L39">            return false;</span>
+        }
+
+<span class="pc bpc" id="L42" title="2 of 4 branches missed.">        if (category == null || category.isEmpty()) {</span>
+<span class="nc" id="L43">            return false;</span>
+        }
+
+<span class="fc" id="L46">        return true;</span>
+    }
+
+    /**
+     * Update product stock safely.
+     */
+    public void updateStock(int quantity) {
+        // FIXED Defect 4: Ensure we don't subtract more than we have 
+        // and ensure quantity isn't negative
+<span class="pc bpc" id="L55" title="2 of 4 branches missed.">        if (quantity &gt; 0 &amp;&amp; (this.stock - quantity) &gt;= 0) {</span>
+<span class="fc" id="L56">            this.stock -= quantity;</span>
+<span class="nc bnc" id="L57" title="All 2 branches missed.">        } else if (quantity &lt; 0) {</span>
+            // If adding stock (restocking), that's usually a different method, 
+            // but for this project, we prevent illegal subtractions.
+<span class="nc" id="L60">            System.err.println(&quot;Invalid quantity update.&quot;);</span>
+        }
+<span class="fc" id="L62">    }</span>
+
+    // Getters and Setters
+<span class="nc" id="L65">    public Long getId() { return id; }</span>
+<span class="nc" id="L66">    public void setId(Long id) { this.id = id; }</span>
+<span class="nc" id="L67">    public String getName() { return name; }</span>
+<span class="nc" id="L68">    public void setName(String name) { this.name = name; }</span>
+<span class="nc" id="L69">    public double getPrice() { return price; }</span>
+<span class="nc" id="L70">    public void setPrice(double price) { this.price = price; }</span>
+<span class="fc" id="L71">    public int getStock() { return stock; }</span>
+<span class="nc" id="L72">    public void setStock(int stock) { this.stock = stock; }</span>
+<span class="nc" id="L73">    public String getCategory() { return category; }</span>
+<span class="nc" id="L74">    public void setCategory(String category) { this.category = category; }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

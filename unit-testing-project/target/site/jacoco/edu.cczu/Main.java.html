@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Main.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">unit-testing-project</a> &gt; <a href="index.source.html" class="el_package">edu.cczu</a> &gt; <span class="el_source">Main.java</span></div><h1>Main.java</h1><pre class="source lang-java linenums">package edu.cczu;
+
+<span class="nc" id="L3">public class Main {</span>
+    public static void main(String[] args) {
+<span class="nc" id="L5">        System.out.println(&quot;=== E-Commerce System Initialization ===&quot;);</span>
+
+        // 1. Setup Data
+<span class="nc" id="L8">        Product laptop = new Product(101L, &quot;Gaming Laptop&quot;, 8000.0, 5, &quot;Electronics&quot;);</span>
+<span class="nc" id="L9">        ShoppingCart cart = new ShoppingCart();</span>
+
+        // 2. Add to Cart
+<span class="nc" id="L12">        System.out.println(&quot;Adding &quot; + laptop.getName() + &quot; to cart...&quot;);</span>
+<span class="nc" id="L13">        boolean added = cart.addProduct(laptop, 1);</span>
+
+<span class="nc bnc" id="L15" title="All 2 branches missed.">        if (added) {</span>
+<span class="nc" id="L16">            System.out.println(&quot;Item added successfully. Total price: &quot; + cart.calculateTotalPrice());</span>
+        }
+
+        // 3. Setup Services
+        // Note: In a real app, this would connect to a real Bank API.
+        // Here, we just ensure the structure is ready for the Unit Tests.
+<span class="nc" id="L22">        ThirdPartyPaymentInterface paymentGateway = (orderId, amount, method) -&gt; {</span>
+<span class="nc" id="L23">            System.out.println(&quot;Processing &quot; + method + &quot; payment of &quot; + amount + &quot; for Order #&quot; + orderId);</span>
+<span class="nc" id="L24">            return (long) (Math.random() * 1000000); // Simulate a transaction ID</span>
+        };
+
+<span class="nc" id="L27">        PaymentService paymentService = new PaymentService(paymentGateway);</span>
+<span class="nc" id="L28">        CheckoutService checkoutService = new CheckoutService(cart, paymentService);</span>
+
+        // 4. Process Checkout
+<span class="nc" id="L31">        System.out.println(&quot;\nProceeding to Checkout...&quot;);</span>
+<span class="nc" id="L32">        Order finalOrder = checkoutService.checkout(&quot;AliPay&quot;);</span>
+
+<span class="nc bnc" id="L34" title="All 4 branches missed.">        if (finalOrder != null &amp;&amp; &quot;PAID&quot;.equals(finalOrder.getStatus())) {</span>
+<span class="nc" id="L35">            System.out.println(&quot;Checkout Complete!&quot;);</span>
+<span class="nc" id="L36">            System.out.println(&quot;Order ID: &quot; + finalOrder.getOrderId());</span>
+<span class="nc" id="L37">            System.out.println(&quot;Final Amount Paid: &quot; + finalOrder.getFinalAmount());</span>
+        } else {
+<span class="nc" id="L39">            System.out.println(&quot;Checkout Failed.&quot;);</span>
+        }
+
+<span class="nc" id="L42">        System.out.println(&quot;\n=== System Ready for Unit Testing ===&quot;);</span>
+<span class="nc" id="L43">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

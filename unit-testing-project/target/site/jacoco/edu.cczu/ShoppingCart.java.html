@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ShoppingCart.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">unit-testing-project</a> &gt; <a href="index.source.html" class="el_package">edu.cczu</a> &gt; <span class="el_source">ShoppingCart.java</span></div><h1>ShoppingCart.java</h1><pre class="source lang-java linenums">package edu.cczu;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Manages the shopping cart.
+ * Debugged version: Changed Map to store Product objects to fix calculation and stock issues.
+ */
+public class ShoppingCart {
+    // FIXED: Changed Value to Product object to allow price/stock access
+    private Map&lt;Long, CartItem&gt; items;
+
+<span class="fc" id="L14">    public ShoppingCart() {</span>
+<span class="fc" id="L15">        this.items = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L16">    }</span>
+
+    // Helper class to store product and quantity together
+    private static class CartItem {
+        Product product;
+        int quantity;
+<span class="fc" id="L22">        CartItem(Product p, int q) { this.product = p; this.quantity = q; }</span>
+    }
+
+    /**
+     * Add product to cart with proper validation and stock updates.
+     */
+    public boolean addProduct(Product product, int quantity) {
+        // FIXED Defect 5: Added quantity validation
+<span class="pc bpc" id="L30" title="3 of 6 branches missed.">        if (product == null || !product.validateProduct() || quantity &lt;= 0) {</span>
+<span class="nc" id="L31">            return false;</span>
+        }
+
+        // FIXED Defect 6: Corrected stock check logic
+<span class="pc bpc" id="L35" title="1 of 2 branches missed.">        if (product.getStock() &lt; quantity) {</span>
+<span class="nc" id="L36">            return false; // Cannot add more than available</span>
+        }
+
+        // Update cart
+<span class="fc" id="L40">        Long id = product.getId();</span>
+<span class="pc bpc" id="L41" title="1 of 2 branches missed.">        if (items.containsKey(id)) {</span>
+<span class="nc" id="L42">            items.get(id).quantity += quantity;</span>
+        } else {
+<span class="fc" id="L44">            items.put(id, new CartItem(product, quantity));</span>
+        }
+
+        // FIXED Defect 7: Actually update the product's stock
+<span class="fc" id="L48">        product.updateStock(quantity);</span>
+<span class="fc" id="L49">        return true;</span>
+    }
+
+    /**
+     * Remove product from cart.
+     */
+    public boolean removeProduct(Long productId, int quantity) {
+        // FIXED Defect 8: Handle non-existent products gracefully
+<span class="nc bnc" id="L57" title="All 4 branches missed.">        if (productId == null || !items.containsKey(productId)) {</span>
+<span class="nc" id="L58">            return true; // Already gone, so &quot;success&quot;</span>
+        }
+
+<span class="nc" id="L61">        CartItem item = items.get(productId);</span>
+<span class="nc bnc" id="L62" title="All 4 branches missed.">        if (quantity &lt;= 0 || quantity &gt;= item.quantity) {</span>
+            // Restore stock if removing from cart
+<span class="nc" id="L64">            item.product.setStock(item.product.getStock() + item.quantity);</span>
+<span class="nc" id="L65">            items.remove(productId);</span>
+        } else {
+<span class="nc" id="L67">            item.product.setStock(item.product.getStock() + quantity);</span>
+<span class="nc" id="L68">            item.quantity -= quantity;</span>
+        }
+<span class="nc" id="L70">        return true;</span>
+    }
+
+    /**
+     * Calculate total price using real product prices.
+     */
+    public double calculateTotalPrice() {
+<span class="fc" id="L77">        double total = 0.0;</span>
+        // FIXED Defect 9: Now we can access item.product.getPrice()
+<span class="fc bfc" id="L79" title="All 2 branches covered.">        for (CartItem item : items.values()) {</span>
+<span class="fc" id="L80">            total += item.product.getPrice() * item.quantity;</span>
+<span class="fc" id="L81">        }</span>
+<span class="fc" id="L82">        return total;</span>
+    }
+
+    /**
+     * Re-verify if items in cart are still in stock.
+     */
+    public boolean checkStock() {
+        // FIXED Defect 10: Logic now checks actual product objects
+<span class="nc bnc" id="L90" title="All 2 branches missed.">        for (CartItem item : items.values()) {</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">            if (item.product.getStock() &lt; 0) { // Or other business logic</span>
+<span class="nc" id="L92">                return false;</span>
+            }
+<span class="nc" id="L94">        }</span>
+<span class="nc" id="L95">        return true;</span>
+    }
+
+    public void clearCart() {
+<span class="nc" id="L99">        items.clear();</span>
+<span class="nc" id="L100">    }</span>
+
+    // Updated for testing compatibility
+    public Map&lt;Long, Integer&gt; getProductQuantities() {
+<span class="nc" id="L104">        Map&lt;Long, Integer&gt; quantities = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L105">        items.forEach((id, item) -&gt; quantities.put(id, item.quantity));</span>
+<span class="nc" id="L106">        return quantities;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PaymentService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">unit-testing-project</a> &gt; <a href="index.source.html" class="el_package">edu.cczu</a> &gt; <span class="el_source">PaymentService.java</span></div><h1>PaymentService.java</h1><pre class="source lang-java linenums">package edu.cczu;
+
+public class PaymentService {
+    private ThirdPartyPaymentInterface thirdPartyPayment;
+
+<span class="fc" id="L6">    public PaymentService(ThirdPartyPaymentInterface thirdPartyPayment) {</span>
+<span class="fc" id="L7">        this.thirdPartyPayment = thirdPartyPayment;</span>
+<span class="fc" id="L8">    }</span>
+
+    public PaymentResponse processPayment(PaymentRequest request) {
+<span class="pc bpc" id="L11" title="3 of 6 branches missed.">        if (request == null || request.getAmount() &lt;= 0 || request.getPaymentMethod() == null) {</span>
+<span class="nc" id="L12">            return new PaymentResponse(false, &quot;Invalid payment request&quot;, null);</span>
+        }
+
+        try {
+<span class="fc" id="L16">            Long transactionId = thirdPartyPayment.makePayment(request.getOrderId(), request.getAmount(), request.getPaymentMethod());</span>
+<span class="pc bpc" id="L17" title="1 of 2 branches missed.">            if (transactionId == null) {</span>
+<span class="nc" id="L18">                return new PaymentResponse(false, &quot;Payment failed: No transaction ID&quot;, null);</span>
+            }
+<span class="fc" id="L20">            return new PaymentResponse(true, &quot;Payment successful&quot;, transactionId);</span>
+<span class="nc" id="L21">        } catch (Exception e) {</span>
+<span class="nc" id="L22">            return new PaymentResponse(false, &quot;Payment failed: &quot; + e.getMessage(), null);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>
