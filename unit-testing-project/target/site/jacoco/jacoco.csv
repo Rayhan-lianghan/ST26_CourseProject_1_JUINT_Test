@@ -1,10 +1,10 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
 unit-testing-project,edu.cczu,Product,43,65,10,10,14,17,18,5,9,4
-unit-testing-project,edu.cczu,Order,37,0,0,0,13,0,7,0,7,0
+unit-testing-project,edu.cczu,Order,7,30,0,0,2,11,2,5,2,5
 unit-testing-project,edu.cczu,ShoppingCart.CartItem,0,9,0,0,0,1,0,1,0,1
 unit-testing-project,edu.cczu,Main,97,0,6,0,22,0,6,0,3,0
 unit-testing-project,edu.cczu,PaymentService,24,35,4,4,4,7,4,2,0,2
 unit-testing-project,edu.cczu,PaymentRequest,0,21,0,0,0,8,0,4,0,4
 unit-testing-project,edu.cczu,ShoppingCart,111,69,17,7,22,15,16,4,5,3
-unit-testing-project,edu.cczu,CheckoutService,68,17,9,1,13,6,6,2,1,2
+unit-testing-project,edu.cczu,CheckoutService,10,75,3,7,1,18,3,5,0,3
 unit-testing-project,edu.cczu,PaymentResponse,3,18,0,0,1,7,1,3,1,3

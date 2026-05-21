@@ -26,7 +26,7 @@ class ProductTest {
         boolean result = product.validateProduct();
         
         // Assert
-        falseToggle(result, "Negative price should be invalid");
+        assertFalse(result, "Negative price should be invalid"); // <-- Fixed here
     }
 
     @Test
